@@ -1,0 +1,42 @@
+[
+    {
+        "name": "ETH transfer",
+        "template": "Transfer %s ETH to %s"
+    },
+    {
+        "name": "ERC20 transfer",
+        "template": "Transfer %s %s to %s"
+    },
+    {
+        "name": "ERC20 approve",
+        "template": "Allow %s to use %s"
+    },
+    {
+        "name": "UNISWAP swapExactETHForTokens",
+        "template": "Swap %s ETH for %s %s to %s"
+    },
+    {
+        "name": "UNISWAP swapTokensForExactETH",
+        "template": "Swap %s %s for %s ETH to %s"
+    },
+    {
+        "name": "UNISWAP swapTokensForExactTokens",
+        "template": "Swap %s %s for %s %s to %s"
+    },
+    {
+        "name": "UNISWAP swapExactTokensForTokens",
+        "template": "Swap %s %s for %s %s to %s"
+    },
+    {
+        "name": "UNISWAP addLiquidityETH",
+        "template": "Add Liquidity %s ETH and %s %s to %s"
+    },
+    {
+        "name": "UNISWAP addLiquidity",
+        "template": "Add Liquidity %s %s and %s %s to %s"
+    },
+    {
+        "name": "UNKNOWN",
+        "template": "Code: %s"
+    }
+]

@@ -1,0 +1,10 @@
+name: walletconnect
+version: 0.1.0
+environment:
+  sdk: ">=2.0.0 <3.0.0"
+
+dependencies:
+  convert: ^2.1.1
+  crypto: ^2.1.5
+  encrypt: ^4.0.3
+  typed_data: ^1.1.6

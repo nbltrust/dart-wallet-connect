@@ -8,10 +8,9 @@ dependencies:
   walletconnect:
     path: ../
   ethereum_codec:
-    path: ../../dart-eth-trx-codec
-          #    git:
-          #      url: https://github.com/nbltrust/dart-eth-transaction-codec
-          #      ref: main
+    git:
+      url: https://github.com/nbltrust/dart-eth-transaction-codec
+      ref: main
   eth_abi_codec:
     git:
       url: https://github.com/nbltrust/dart-eth-abi-codec

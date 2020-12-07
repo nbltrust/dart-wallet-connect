@@ -1,0 +1,19 @@
+name: walletconnect_test
+version: 0.1.0
+publish_to: 'none'
+
+dependencies:
+  convert: ^2.1.1
+  walletconnect:
+    path: ../
+  test: any
+  dio: ^3.0.10
+  pointycastle: ^1.0.1
+  ethereum_codec:
+    git:
+      url: https://github.com/nbltrust/dart-eth-transaction-codec
+      ref: main
+  eth_abi_codec:
+    git:
+      url: https://github.com/nbltrust/dart-eth-abi-codec
+      ref: main

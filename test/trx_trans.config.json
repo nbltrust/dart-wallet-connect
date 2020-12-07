@@ -1,0 +1,70 @@
+[
+    {
+        "id": "ETH_transfer",
+        "desc_en": "Transfer %s ETH to %s",
+        "translators": [
+            "ETHAMT IMMED-18 FMTAMT",
+            "TO FMTADDR"
+        ]
+    },
+    {
+        "id": "ERC20_approve",
+        "desc_en": "Approve %s use %s %s",
+        "translators": [
+            "ARG-_spender FMTADDR",
+            "ARG-_value TO DECIMAL FMTAMT",
+            "TO SYMBOL"
+        ]
+    },
+    {
+        "id": "UNISWAP_swapETHForExactTokens",
+        "desc_en": "swap %s ETH for %s %s to %s",
+        "translators": [
+            "ETHAMT IMMED-18 FMTAMT",
+            "ARG-amountOut ARG-path LST--1 DECIMAL FMTAMT",
+            "ARG-path LST--1 SYMBOL",
+            "ARG-to FMTADDR"
+        ]
+    },
+    {
+        "id": "UNISWAP_swapExactETHForTokens",
+        "desc_en": "swap %s ETH for %s %s to %s",
+        "translators": [
+            "ETHAMT IMMED-18 FMTAMT",
+            "ARG-amountOutMin ARG-path LST--1 DECIMAL FMTAMT",
+            "ARG-path LST--1 SYMBOL",
+            "ARG-to FMTADDR"
+        ]
+    },
+    {
+        "id": "UNISWAP_swapExactTokensForETH",
+        "desc_en": "swap %s %s for %s ETH to %s",
+        "translators": [
+            "ARG-amountIn ARG-path LST-0 DECIMAL FMTAMT",
+            "ARG-path LST-0 SYMBOL",
+            "ARG-amountOutMin IMMED-18 FMTAMT",
+            "ARG-to FMTADDR"
+        ]
+    },
+    {
+        "id": "UNISWAP_addLiquidityETH",
+        "desc_en": "add %s ETH and %s %s to %s",
+        "translators": [
+            "ETHAMT IMMED-18 FMTAMT",
+            "ARG-amountTokenDesired ARG-token DECIMAL FMTAMT",
+            "ARG-token SYMBOL",
+            "ARG-to FMTADDR"
+        ]
+    },
+    {
+        "id": "UNISWAP_swapExactTokensForTokens",
+        "desc_en": "swap %s %s for %s %s to %s",
+        "translators": [
+            "ARG-amountIn ARG-path LST-0 DECIMAL FMTAMT",
+            "ARG-path LST-0 SYMBOL",
+            "ARG-amountOutMin ARG-path LST--1 DECIMAL FMTAMT",
+            "ARG-path LST--1 SYMBOL",
+            "ARG-to FMTADDR"
+        ]
+    }
+]

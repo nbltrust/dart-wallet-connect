@@ -1,0 +1,114 @@
+[
+    {
+        "inputs": [
+            {
+                "name": "asset",
+                "type": "address"
+            },
+            {
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "name": "onBehalfOf",
+                "type": "address"
+            },
+            {
+                "name": "referralCode",
+                "type": "uint16"
+            }
+        ],
+        "name": "deposit",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "name": "destination",
+                "type": "address"
+            }
+        ],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "asset",
+                "type": "address"
+            },
+            {
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "name": "rateMode",
+                "type": "uint256"
+            },
+            {
+                "name": "onBehalfOf",
+                "type": "address"
+            }
+        ],
+        "name": "repay",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "asset",
+                "type": "address"
+            },
+            {
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "name": "interestRateMode",
+                "type": "uint256"
+            },
+            {
+                "name": "referralCode",
+                "type": "uint16"
+            },
+            {
+                "name": "onBehalfOf",
+                "type": "address"
+            }
+        ],
+        "name": "borrow",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "asset",
+                "type": "address"
+            },
+            {
+                "name": "useAsCollateral",
+                "type": "bool"
+            }
+        ],
+        "name": "setUserUseReserveAsCollateral",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

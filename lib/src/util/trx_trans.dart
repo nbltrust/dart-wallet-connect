@@ -63,7 +63,7 @@ class CallTrans {
     var commands = command.split(' ');
     for(var i = 0; i < commands.length; i++) {
       var op = commands[i];
-      print("${command}: ${op}: ${stack}");
+      // print("${command}: ${op}: ${stack}");
       // command.split(' ').forEach((op) async {
       if(op.startsWith('ARG-')) { // Push argument to stack, e.g. ARG-_spender will push inputArgs['_spender']
         var argName = op.substring(4);
@@ -94,6 +94,15 @@ class CallTrans {
         }
 
         stack.add(lst[idx]);
+        continue;
+      }
+
+      if(op.startsWith('TST')) { // Pop true-value, false-value and bool from stack and push back according to test result
+        var condition = stack.removeLast() as bool;
+        var falseVal = stack.removeLast() as String;
+        var trueVal = stack.removeLast() as String;
+        stack.add(condition ? trueVal : falseVal);
+        continue;
       }
 
       if(op == 'TO') { // Push toAddr to top of stack
@@ -124,7 +133,7 @@ class CallTrans {
         var decimal = int.parse(stack.removeLast());
         var amount = BigInt.parse(stack.removeLast());
         if(amount == BigInt.parse('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', radix: 16)) {
-          stack.add('unlimited');
+          stack.add('all');
           continue;
         }
         var r = amount / BigInt.from(pow(10, decimal));
@@ -139,8 +148,8 @@ class CallTrans {
       }
 
       if(op == 'FMTADDR') { // Pops address from stack and push back checked encode of address.
-        var addr = stack.removeLast() as String;
-        stack.add(toChecksumAddress(addr));
+        var addr = toChecksumAddress(stack.removeLast() as String);
+        stack.add(addr.substring(0, 4) + '...' + addr.substring(addr.length - 4));
         continue;
       }
     }

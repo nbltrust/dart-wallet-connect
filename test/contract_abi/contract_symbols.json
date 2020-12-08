@@ -8,6 +8,21 @@
         }
     },
     {
+        "address": "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
+        "symbol": "AAVE",
+        "type": "AAVE"
+    },
+    {
+        "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "symbol": "WETH",
+        "type": "ERC20"
+    },
+    {
+        "address": "0x71fc860f7d3a592a4a98740e39db31d25db65ae8",
+        "symbol": "aUSDT",
+        "type": "ERC20"
+    },
+    {
         "address": "0x9AAb3f75489902f3a48495025729a0AF77d4b11e",
         "symbol": "KYBERSWAP",
         "type": "KYBERSWAP"

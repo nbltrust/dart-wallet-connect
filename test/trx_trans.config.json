@@ -47,12 +47,12 @@
         ]
     },
     {
-        "id": "UNISWAP_addLiquidityETH",
-        "desc_en": "add %s ETH and %s %s to %s",
+        "id": "UNISWAP_swapTokensForExactETH",
+        "desc_en": "swap %s %s for %s ETH to %s",
         "translators": [
-            "ETHAMT IMMED-18 FMTAMT",
-            "ARG-amountTokenDesired ARG-token DECIMAL FMTAMT",
-            "ARG-token SYMBOL",
+            "ARG-amountInMax ARG-path LST-0 DECIMAL FMTAMT",
+            "ARG-path LST-0 SYMBOL",
+            "ARG-amountOut IMMED-18 FMTAMT",
             "ARG-to FMTADDR"
         ]
     },
@@ -65,6 +65,139 @@
             "ARG-amountOutMin ARG-path LST--1 DECIMAL FMTAMT",
             "ARG-path LST--1 SYMBOL",
             "ARG-to FMTADDR"
+        ]
+    },
+    {
+        "id": "UNISWAP_swapTokensForExactTokens",
+        "desc_en": "swap %s %s for %s %s to %s",
+        "translators": [
+            "ARG-amountInMax ARG-path LST-0 DECIMAL FMTAMT",
+            "ARG-path LST-0 SYMBOL",
+            "ARG-amountOut ARG-path LST--1 DECIMAL FMTAMT",
+            "ARG-path LST--1 SYMBOL",
+            "ARG-to FMTADDR"
+        ]
+    },
+    {
+        "id": "UNISWAP_swapExactTokensForTokensSupportingFeeOnTransferTokens",
+        "desc_en": "swap %s %s for %s %s to %s",
+        "translators": [
+            "ARG-amountIn ARG-path LST-0 DECIMAL FMTAMT",
+            "ARG-path LST-0 SYMBOL",
+            "ARG-amountOutMin ARG-path LST--1 DECIMAL FMTAMT",
+            "ARG-path LST--1 SYMBOL",
+            "ARG-to FMTADDR"
+        ]
+    },
+    {
+        "id": "UNISWAP_swapExactTokensForETHSupportingFeeOnTransferTokens",
+        "desc_en": "swap %s %s for %s ETH to %s",
+        "translators": [
+            "ARG-amountIn ARG-path LST-0 DECIMAL FMTAMT",
+            "ARG-path LST-0 SYMBOL",
+            "ARG-amountOutMin IMMED-18 FMTAMT",
+            "ARG-to FMTADDR"
+        ]
+    },
+
+    {
+        "id": "UNISWAP_addLiquidity",
+        "desc_en": "add %s %s and %s %s to %s",
+        "translators": [
+            "ARG-amountADesired ARG-tokenA DECIMAL FMTAMT",
+            "ARG-tokenA SYMBOL",
+            "ARG-amountBDesired ARG-tokenB DECIMAL FMTAMT",
+            "ARG-tokenB SYMBOL",
+            "ARG-to FMTADDR"
+        ]
+    },
+    {
+        "id": "UNISWAP_addLiquidityETH",
+        "desc_en": "add %s ETH and %s %s to %s",
+        "translators": [
+            "ETHAMT IMMED-18 FMTAMT",
+            "ARG-amountTokenDesired ARG-token DECIMAL FMTAMT",
+            "ARG-token SYMBOL",
+            "ARG-to FMTADDR"
+        ]
+    },
+    {
+        "id": "UNISWAP_removeLiquidityETH",
+        "desc_en": "remove %s ETH and %s %s",
+        "translators": [
+            "ARG-amountETHMin IMMED-18 FMTAMT",
+            "ARG-amountTokenMin ARG-token DECIMAL FMTAMT",
+            "ARG-token SYMBOL"
+        ]
+    },
+    {
+        "id": "ERC20_deposit",
+        "desc_en": "wrap %s ETH into %s %s",
+        "translators": [
+            "ETHAMT IMMED-18 FMTAMT",
+            "ETHAMT IMMED-18 FMTAMT",
+            "TO SYMBOL"
+        ]
+    },
+    {
+        "id": "ERC20_withdraw",
+        "desc_en": "unwrap %s %s into %s ETH",
+        "translators": [
+            "ARG-wad TO DECIMAL FMTAMT",
+            "TO SYMBOL",
+            "ARG-wad TO DECIMAL FMTAMT"
+        ]
+    },
+    {
+        "id": "ERC20_redeem",
+        "desc_en": "redeem %s %s",
+        "translators": [
+            "ARG-amount TO DECIMAL FMTAMT",
+            "TO SYMBOL"
+        ]
+    },
+    {
+        "id": "AAVE_deposit",
+        "desc_en": "deposit %s %s for %s",
+        "translators": [
+            "ARG-amount ARG-asset DECIMAL FMTAMT",
+            "ARG-asset SYMBOL",
+            "ARG-onBehalfOf FMTADDR"
+        ]
+    },
+    {
+        "id": "AAVE_withdraw",
+        "desc_en": "withdraw %s %s to %s",
+        "translators": [
+            "ARG-amount ARG-token DECIMAL FMTAMT",
+            "ARG-token SYMBOL",
+            "ARG-destination FMTADDR"
+        ]
+    },
+    {
+        "id": "AAVE_repay",
+        "desc_en": "repay %s %s for %s",
+        "translators": [
+            "ARG-amount ARG-asset DECIMAL FMTAMT",
+            "ARG-asset SYMBOL",
+            "ARG-onBehalfOf FMTADDR"
+        ]
+    },
+    {
+        "id": "AAVE_borrow",
+        "desc_en": "borrow %s %s for %s",
+        "translators": [
+            "ARG-amount ARG-asset DECIMAL FMTAMT",
+            "ARG-asset SYMBOL",
+            "ARG-onBehalfOf FMTADDR"
+        ]
+    },
+    {
+        "id": "AAVE_setUserUseReserveAsCollateral",
+        "desc_en": "%s %s as collateral",
+        "translators": [
+            "IMMED-enable IMMED-disable ARG-useAsCollateral TST",
+            "ARG-asset SYMBOL"
         ]
     }
 ]

@@ -30,7 +30,12 @@ Future<dynamic> callInfura(String method, List<dynamic> params) async {
 }
 
 Future<String> ethCall(String to, String data) async {
+  if(!to.startsWith('0x'))
+    to = '0x' + to;
+  // print(to);
+  // print(data);
   var res = await callInfura('eth_call', [{'to': to, 'data': data}, 'latest']);
+  // print(res);
   if((res as Map).containsKey('error')) {
     throw Exception("Call contract error");
   }
@@ -49,6 +54,10 @@ Future<List<dynamic>> getERC20Config(String address) async {
   return [name, symbol, decimal];
 }
 
+Future<Map<String, dynamic>> commonEthCall(String to, String method, Map<String, dynamic> args) async {
+  return await callContract(to, method, args, ethCall);
+}
+
 Future<String> runTranslate(TrxTrans translator, String trxId) async {
   var trx = await callInfura('eth_getTransactionByHash', [trxId]);
   if(trx['result']['input'] != '0x') {
@@ -57,7 +66,7 @@ Future<String> runTranslate(TrxTrans translator, String trxId) async {
       print('Contract not configured, ${trx["result"]["to"]}');
       return '';
     } else {
-      print('Contract Type ${cfg.type}');
+      // print('Contract Type ${cfg.type}');
     }
     var abi = getContractABIByType(cfg.type);
     if(abi == null) {
@@ -88,7 +97,9 @@ Future<String> runTranslate(TrxTrans translator, String trxId) async {
 void main() async {
   initContractABIs('contract_abi');
   ERC20Cache.createInstance(getERC20Config);
-  var translator = TrxTrans('trx_trans.config.json');
+  CommonCallCache.createInstance(commonEthCall);
+
+  var translator = TrxTrans('contract_abi/trx_trans.json');
 
   test('test ETH transfer', () async {
     expect(
@@ -247,4 +258,101 @@ void main() async {
       await runTranslate(translator, '0x0809adba8d5c836a2e1a04826ca0efacf6a2bcd3607a6bfd5e0e41ae0c222c43'),
       'disable LINK as collateral');
   });
+
+  test('test CURVEFIYSWAP exchange_underlying', () async {
+    expect(
+      await runTranslate(translator, '0x5bcc98a8020db0c842e6fbff84fa7ab11c355a20d6c0e3b1e07114ae543f401f'),
+      'sell 23737.46 USDT for 23496.16 TUSD');
+  });
+
+  test('test CURVEFIYSWAP add_liquidity', () async {
+    expect(
+      await runTranslate(translator, '0x7d66d1962929a5e64299fffa7d5c38a922a00cf28336232f56623af9d31f2b1d'),
+      'add 354.01 DAI, 0.00000 USDC, 0.00000 USDT, 0.00000 TUSD to y Swap');
+  });
+
+  test('test CURVEFIDAIPOOL exchange', () async {
+    expect(
+      await runTranslate(translator, '0xa122e98efaf7ad723a1e4e3d4ac5f2aa7f6d0ba070e4755e97eedb1f820128a9'),
+      'sell 21400.00 USDC for 21185.47 USDT'
+    );
+  });
+
+  test('test CURVEFIDAI add_liquidity', () async {
+    expect(
+      await runTranslate(translator, '0x6d4ded20f944d54ba5a23b5ad2c99d37e64848bb8cdddcc0a9fcc89b4e3a1d56'),
+      'add 0.00000 DAI, 0.00000 USDC, 20000.00 USDT to DAI/USDC/USDT pool'
+    );
+  });
+
+  test('test CURVEFIDAI remove_liquidity_one_coin', () async {
+    expect(
+      await runTranslate(translator, '0x00b404788fe0d7f94cc44e3999172f8da8be3185871b8f53096e26d57e894ecf'),
+      'remove 530.55 USDT from DAI/USDC/USDT pool'
+    );
+  });
+
+  test('test CURVEFIDAIGAUGE withdraw', () async {
+    expect(
+      await runTranslate(translator, '0x4a60e0d192b6ea8cd4d48d372a181bb332910b33880acc82d8a3a3e8874d0099'),
+      'withdraw 6460332.94 3Crv from DAI/USDC/USDT Gauge'
+    );
+  });
+
+  test('test CURVEFIDAIGAUGE deposit', () async {
+    expect(
+      await runTranslate(translator, '0xfd0b7a6c494600ac6963a47199773a54aed3cd9824e07511472c5b01c8a0ee2b'),
+      'deposit 125.39 3Crv to DAI/USDC/USDT Gauge'
+    );
+  });
+
+  test('test CURVEFIUSDNPOOL add_liquidity', () async {
+    expect(
+      await runTranslate(translator, '0x6366016af4c5e015741d9813bb3ad85a60e398c496f354ffe7125bece6d0cc3b'),
+      'add 46.56 USDN, 1357.48 3Crv to USDN pool'
+    );
+  });
+
+  test('test CURVEFIUSDNPOOL exchange_underlying', () async {
+    expect(
+      await runTranslate(translator, '0x55b97aa0e15f402e8754f29a4e7d63432f0fa088507778e5d4ed54f638248f27'),
+      'sell 1.0000 USDN for 0.984393 USDC'
+    );
+  });
+
+  test('test CURVEFIUSDNPOOL remove_liquidity_imbalance', () async {
+    expect(
+      await runTranslate(translator, '0xbaf342b0ed175cb324215f0bb873b1f200a99f22d9130e88a2a30e80574ac480'),
+      'remove 0.0100221 USDN/3Crv for 0.0100000 USDN, 0.00000 3Crv'
+    );
+  });
+
+  test('test CURVEFIUSDNPOOL remove_liquidity_one_coin', () async {
+    expect(
+      await runTranslate(translator, '0x8dfb902f009760e841ec0238d98dfde9027949bc834a8c40a1b3fd910ff9a668'),
+      'withdraw 30057.98 3Crv from USDN pool'
+    );
+  });
+
+  test('test CURVEFIUSDNDEPOSIT add_liquidity', () async {
+    expect(
+      await runTranslate(translator, '0x3ed48d4bdceaed731ae17876867b2a9e02118bb6e87aa9ee37dc24cb7bea7e43'),
+      'add 10.00 USDN, 0.00000 DAI, 0.00000 USDC, 100.00 USDT to USDN deposit pool for 108.51 USDN/3Crv'
+    );
+  });
+
+  test('test CURVEFIUSDNDEPOSIT remove_liquidity_one_coin', () async {
+    expect(
+      await runTranslate(translator, '0xf3ae9ec3c4512ed11fd936c6dacd34c2e09396aadf8e514e061edbcbb824201f'),
+      'withdraw 21955.15 USDN from USDN deposit pool'
+    );
+  });
+
+  test('test CURVEFIUSDNDEPOSIT remove_liquidity', () async {
+    expect(
+      await runTranslate(translator, '0x6c3178ca773cb27784529e1394507fb1e9ec8a0ee1857c11bc53d5f9d2c06a7a'),
+      'pay 1012.86 USDN/3Crv to remove at least 0.00124904 USDN, 0.000127935 DAI, 0.000308000 USDC, 0.000254000 USDT from USDN deposit pool'
+    );
+  });
+  
 }

@@ -31,6 +31,41 @@ class ERC20Cache {
   }
 }
 
+typedef Future<Map<String, dynamic>> CommonCallback(String address, String method, Map<String, dynamic> args);
+
+class CommonCallCache {
+  static CommonCallCache __instance;
+
+  static void createInstance(CommonCallback cb) {
+    __instance = CommonCallCache(cb);
+  }
+  static CommonCallCache instance() => __instance;
+
+  CommonCallback callback;
+  CommonCallCache(this.callback): cache = {};
+  Map<String, Map<String, dynamic>> cache;
+
+  Future<Map<String, dynamic>> call(String address, String method, Map<String, dynamic> args) async {
+    var cacheKey = '';
+    if(address.startsWith('0x'))
+      address = address.substring(2);
+    cacheKey += address.toLowerCase();
+    cacheKey += '|$method';
+    var sortedKeys = args.keys.toList();
+    sortedKeys.sort();
+    sortedKeys.forEach((element) {
+      cacheKey += '|$element|${args[element]}';
+    });
+    if(cache.containsKey(cacheKey)) {
+      return cache[cacheKey];
+    }
+
+    var res = await callback(address, method, args);
+    cache[cacheKey] = res;
+    return res;
+  }
+}
+
 /// convert address to checksum address
 /// 
 /// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md
@@ -64,27 +99,29 @@ class CallTrans {
     for(var i = 0; i < commands.length; i++) {
       var op = commands[i];
       // print("${command}: ${op}: ${stack}");
-      // command.split(' ').forEach((op) async {
+      
+      var stackAdd = (dynamic val) {
+        if(val is BigInt || val is num)
+          stack.add(val.toString());
+        else
+          stack.add(val);
+      };
+
       if(op.startsWith('ARG-')) { // Push argument to stack, e.g. ARG-_spender will push inputArgs['_spender']
         var argName = op.substring(4);
-        var arg = inputArgs[argName];
-        if(arg is BigInt || arg is num) {
-          stack.add(arg.toString());
-        } else {
-          stack.add(arg);
-        }
+        stackAdd(inputArgs[argName]);
         continue;
       }
 
       if(op.startsWith('IMMED-')) { // Push immediate value to stack
         var immedVal = op.substring(6);
-        stack.add(immedVal);
+        stackAdd(immedVal);
         continue;
       }
 
-      if(op.startsWith('LST-')) { // Pop list from stack and push list item back to stack
+      if(op.startsWith('LSTITEM')) { // Pop index and list from stack and push list item back to stack
+        var idx = int.parse(stack.removeLast() as String);
         var lst = stack.removeLast() as List;
-        var idx = int.parse(op.substring(4));
         while(idx < 0) {
           idx += lst.length;
         }
@@ -93,7 +130,7 @@ class CallTrans {
           throw Exception("List index out of range");
         }
 
-        stack.add(lst[idx]);
+        stackAdd(lst[idx]);
         continue;
       }
 
@@ -101,31 +138,65 @@ class CallTrans {
         var condition = stack.removeLast() as bool;
         var falseVal = stack.removeLast() as String;
         var trueVal = stack.removeLast() as String;
-        stack.add(condition ? trueVal : falseVal);
+        stackAdd(condition ? trueVal : falseVal);
+        continue;
+      }
+
+      if(op == 'LIST') { // Pop list length, and items one by one from stack, and push back list object
+        var len = int.parse(stack.removeLast());
+        List<String> obj = [];
+        for(var i = 0; i < len; i++) {
+          obj.add(stack.removeLast() as String);
+        }
+        stackAdd(obj);
+      }
+  
+      if(op == 'CALL') {
+        // Pop sequence:
+        // 1. call target address
+        // 2. call function name
+        // 3. argument count
+        // for i in argument count
+        //     pops agument valus
+        //     pops argument name
+        // 4. result data field
+        // and push result back
+        var targetAddr = stack.removeLast() as String;
+        var method = stack.removeLast() as String;
+        var argumentCount = int.parse(stack.removeLast());
+        Map<String, dynamic> argMap = {};
+        for(var i = 0; i < argumentCount; i++) {
+          var argName = stack.removeLast() as String;
+          var argVal = stack.removeLast();
+          argMap[argName] = argVal;
+        }
+        var resField = stack.removeLast() as String;
+        var res = await CommonCallCache.instance().call(targetAddr, method, argMap);
+        stackAdd(res[resField]);
         continue;
       }
 
       if(op == 'TO') { // Push toAddr to top of stack
-        stack.add(toAddr);
+        stackAdd(toAddr);
         continue;
       }
 
       if(op == 'ETHAMT') { // Push ethVal to top of stack
-        stack.add(ethVal.toString());
+        stackAdd(ethVal.toString());
         continue;
       }
 
       if(op == 'SYMBOL') { // Pops erc20 address from stack and push back symbol
         var addr = stack.removeLast() as String;
         var cfg = await ERC20Cache.instance().getERC20Config(addr);
-        stack.add(cfg[1]);
+        stackAdd(cfg[1]);
         continue;
       }
 
       if(op == 'DECIMAL') { // Pops erc20 address from stack and push back decimal
         var addr = stack.removeLast() as String;
         var cfg = await ERC20Cache.instance().getERC20Config(addr);
-        stack.add(cfg[2].toString());
+        stackAdd(cfg[2].toString());
         continue;
       }
 
@@ -133,23 +204,23 @@ class CallTrans {
         var decimal = int.parse(stack.removeLast());
         var amount = BigInt.parse(stack.removeLast());
         if(amount == BigInt.parse('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', radix: 16)) {
-          stack.add('all');
+          stackAdd('all');
           continue;
         }
         var r = amount / BigInt.from(pow(10, decimal));
         if(r >= 10) {
-          stack.add(r.toStringAsFixed(2));
+          stackAdd(r.toStringAsFixed(2));
         } else if(r >= 1) {
-          stack.add(r.toStringAsFixed(4));
+          stackAdd(r.toStringAsFixed(4));
         } else {
-          stack.add(r.toStringAsPrecision(6));
+          stackAdd(r.toStringAsPrecision(6));
         }
         continue;
       }
 
       if(op == 'FMTADDR') { // Pops address from stack and push back checked encode of address.
         var addr = toChecksumAddress(stack.removeLast() as String);
-        stack.add(addr.substring(0, 4) + '...' + addr.substring(addr.length - 4));
+        stackAdd(addr.substring(0, 4) + '...' + addr.substring(addr.length - 4));
         continue;
       }
     }

@@ -107,7 +107,8 @@ class WalletConnectClient {
     print('begin websocket connection loop with url ${bridge_url}');
     final requestor = StreamController<JsonRpcRequest>();
 
-    var ws = await WebSocket.connect(bridge_url);
+    final ws = await WebSocket.connect(bridge_url);
+    ws.pingInterval = new Duration(seconds: 10);
     ws.listen((msg) async {
       try {
         connected = true;
